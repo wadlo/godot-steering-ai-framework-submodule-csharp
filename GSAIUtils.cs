@@ -1,4 +1,4 @@
-﻿using Godot;
+using Godot;
 using System;
 
 namespace GodotSteeringAI
@@ -31,7 +31,7 @@ namespace GodotSteeringAI
         /// <returns></returns>
         public static float Vector3ToAngle(Vector3 vector)
         {
-            return Mathf.Atan2(vector.x, vector.z);
+            return Mathf.Atan2(vector.X, vector.Z);
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace GodotSteeringAI
         /// <returns></returns>
         public static float Vector2ToAngle(Vector2 vector)
         {
-            return Mathf.Atan2(vector.x, -vector.y);
+            return Mathf.Atan2(vector.X, -vector.Y);
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace GodotSteeringAI
         /// <returns></returns>
         public static Vector2 ToVector2(Vector3 vector)
         {
-            return new Vector2(vector.x, vector.y);
+            return new Vector2(vector.X, vector.Y);
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace GodotSteeringAI
         /// <returns></returns>
         public static Vector3 ToVector3(Vector2 vector)
         {
-            return new Vector3(vector.x, vector.y, 0);
+            return new Vector3(vector.X, vector.Y, 0);
         }
     }
 }

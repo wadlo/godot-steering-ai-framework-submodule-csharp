@@ -1,4 +1,4 @@
-﻿using Godot;
+using Godot;
 using System;
 
 namespace GodotSteeringAI
@@ -7,7 +7,7 @@ namespace GodotSteeringAI
     /// Adds velocity, speed, and size data to `GSAIAgentLocation`.
     /// It is the character's responsibility to keep this information up to date for the steering toolkit to work correctly.
     /// </summary>
-    public class GSAISteeringAgent : GSAIAgentLocation
+    public partial class GSAISteeringAgent : GSAIAgentLocation
     {
         /// <summary>
         /// The amount of velocity to be considered effectively not moving.

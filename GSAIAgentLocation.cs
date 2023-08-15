@@ -1,4 +1,4 @@
-﻿using Godot;
+using Godot;
 using System;
 
 namespace GodotSteeringAI
@@ -6,7 +6,7 @@ namespace GodotSteeringAI
     /// <summary>
     /// Represents an agent with only a location and an orientation.
     /// </summary>
-    public class GSAIAgentLocation : Godot.Object
+    public partial class GSAIAgentLocation : GodotObject
     {
         /// <summary>
         /// The agent's position in space.

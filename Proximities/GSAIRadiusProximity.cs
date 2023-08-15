@@ -1,4 +1,4 @@
-﻿using Godot;
+using Godot;
 using System;
 using System.Collections.Generic;
 
@@ -9,7 +9,7 @@ namespace GodotSteeringAI
     /// they lie within the specified radius.
     /// @category - Proximities
     /// </summary>
-    public class GSAIRadiusProximity : GSAIProximity
+    public partial class GSAIRadiusProximity : GSAIProximity
     {
         /// <summary>
         /// The radius around the owning agent to find neighbors in

@@ -1,4 +1,4 @@
-﻿using Godot;
+using Godot;
 using System;
 using Godot.Collections;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ namespace GodotSteeringAI
     /// <summary>
     /// Represents a path made up of Vector3 waypoints, split into segments path follow behaviors can use.
     /// </summary>
-    class GSAIPath : Reference
+    public partial class GSAIPath : RefCounted
     {
         /// <summary>
         /// If `false`, the path loops.

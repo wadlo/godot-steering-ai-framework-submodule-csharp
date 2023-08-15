@@ -1,4 +1,4 @@
-﻿using Godot;
+using Godot;
 using System;
 
 namespace GodotSteeringAI
@@ -13,7 +13,7 @@ namespace GodotSteeringAI
         /// <summary>
         /// The path to follow and travel along.
         /// </summary>
-        public GSAIPath Path { get; set; }
+        public GSAIPath Path3D { get; set; }
 
         /// <summary>
         /// The distance along the path to generate the next target position.
@@ -35,7 +35,7 @@ namespace GodotSteeringAI
         public GSAIFollowPath(GSAISteeringAgent agent, GSAIPath path, float path_offset = 0, float prediction_time = 0)
             :base(agent, null)
         {
-            Path = path;
+            Path3D = path;
             PathOffset = path_offset;
             PredictionTime = prediction_time;
         }
@@ -46,23 +46,23 @@ namespace GodotSteeringAI
                 Agent.Position :
                 Agent.Position + (Agent.LinearVelocity * PredictionTime);
 
-            var distance = Path.CalculateDistance(location);
+            var distance = Path3D.CalculateDistance(location);
             var target_distance = distance + PathOffset;
 
-            if (PredictionTime > 0 && Path.IsOpen)
+            if (PredictionTime > 0 && Path3D.IsOpen)
             {
-                if (target_distance < Path.CalculateDistance(Agent.Position))
+                if (target_distance < Path3D.CalculateDistance(Agent.Position))
                 {
-                    target_distance = Path.Length;
+                    target_distance = Path3D.Length;
                 }
             }
 
-            var target_position = Path.CalculateTargetPosition(target_distance);
-            if (IsArriveEnabled && Path.IsOpen)
+            var target_position = Path3D.CalculateTargetPosition(target_distance);
+            if (IsArriveEnabled && Path3D.IsOpen)
             {
                 if (PathOffset >= 0)
                 {
-                    if (target_distance > Path.Length - DecelerationRadius)
+                    if (target_distance > Path3D.Length - DecelerationRadius)
                     {
                         _Arrive(acceleration, target_position);
                         return;

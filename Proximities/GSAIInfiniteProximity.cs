@@ -1,4 +1,4 @@
-﻿using Godot;
+using Godot;
 using System;
 using System.Collections.Generic;
 
@@ -9,7 +9,7 @@ namespace GodotSteeringAI
     /// owner agent, regardless of distance.
     /// @category - Proximities
     /// </summary>
-    class GSAIInfiniteProximity : GSAIProximity
+    public partial class GSAIInfiniteProximity : GSAIProximity
     {
         public GSAIInfiniteProximity(GSAISteeringAgent agent, List<GSAISteeringAgent> agents)
             : base(agent, agents) { }

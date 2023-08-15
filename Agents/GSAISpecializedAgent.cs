@@ -1,4 +1,4 @@
-﻿using Godot;
+using Godot;
 using System;
 
 namespace GodotSteeringAI
@@ -10,7 +10,7 @@ namespace GodotSteeringAI
     /// @category - Specialized agents
     /// @tags - abstract
     /// </summary>
-    public abstract class GSAISpecializedAgent : GSAISteeringAgent
+    public abstract partial class GSAISpecializedAgent : GSAISteeringAgent
     {
         /// <summary>
         /// If `true`, calculates linear and angular velocities based on the previous

@@ -1,4 +1,4 @@
-﻿using Godot;
+using Godot;
 using System;
 using System.Collections.Generic;
 
@@ -9,7 +9,7 @@ namespace GodotSteeringAI
     /// @category - Proximities
     /// @tags - abstract
     /// </summary>
-    public abstract class GSAIProximity : Reference
+    public abstract partial class GSAIProximity : RefCounted
     {
         /// <summary>
         /// The owning agent whose neighbors are found in the group

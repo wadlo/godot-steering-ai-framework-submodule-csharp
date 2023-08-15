@@ -1,4 +1,4 @@
-﻿using Godot;
+using Godot;
 using System;
 
 
@@ -9,7 +9,7 @@ namespace GodotSteeringAI
     /// not have to using a KinematicBody2D.
     /// @category - Specialized agents
     /// </summary>
-    public class GSAIKinematicBody2DAgent : GSAISpecializedAgent
+    public partial class GSAIKinematicBody2DAgent : GSAISpecializedAgent
     {
         /// <summary>
         /// SLIDE uses `move_and_slide`
@@ -24,7 +24,7 @@ namespace GodotSteeringAI
         /// <summary>
         /// The KinematicBody2D to keep track of
         /// </summary>
-        public KinematicBody2D Body { get { return _BodyRefToBody(); } set { _SetBody(value); } }
+        public CharacterBody2D Body { get { return _BodyRefToBody(); } set { _SetBody(value); } }
 
         /// <summary>
         /// The type of movement the body executes
@@ -34,28 +34,28 @@ namespace GodotSteeringAI
         private WeakRef _body_ref;
         private Vector2 _last_position;
 
-        private KinematicBody2D _BodyRefToBody()
+        private CharacterBody2D _BodyRefToBody()
         {
-            return _body_ref.GetRef() as KinematicBody2D;
+            return _body_ref.GetRef().As<CharacterBody2D>();
         }
 
-        public GSAIKinematicBody2DAgent(KinematicBody2D body, MovementType moveType = MovementType.SLIDE)
+        public GSAIKinematicBody2DAgent(CharacterBody2D body, MovementType moveType = MovementType.SLIDE)
         {
             _body_ref = WeakRef(body);
             MoveType = moveType;
             if (!body.IsInsideTree())
             {
-                body.Connect("ready", this, nameof(_OnBody_Ready));
+                body.Connect("ready", new Callable(this, nameof(_OnBody_Ready)));
                 return;
             }
             _SetBody(body);
-            body.GetTree().Connect("physics_frame", this, nameof(_onSceneTree_PhysicsFrame));
+            body.GetTree().Connect("physics_frame", new Callable(this, nameof(_onSceneTree_PhysicsFrame)));
         }
 
         private void _OnBody_Ready()
         {
             _SetBody(_BodyRefToBody());
-            _BodyRefToBody().GetTree().Connect("physics_frame", this, nameof(_onSceneTree_PhysicsFrame));
+            _BodyRefToBody().GetTree().Connect("physics_frame", new Callable(this, nameof(_onSceneTree_PhysicsFrame)));
         }
 
         /// <summary>
@@ -86,37 +86,40 @@ namespace GodotSteeringAI
             _ApplyOrientationSteering(body, acceleration.Angular, delta);
         }
 
-        private void _ApplySlidingSteering(KinematicBody2D body, Vector3 accel, float delta)
+        private void _ApplySlidingSteering(CharacterBody2D body, Vector3 accel, float delta)
         {
-            var velocity = GSAIUtils.ToVector2(LinearVelocity + accel * delta).Clamped(LinearSpeedMax);
+            var velocity = GSAIUtils.ToVector2(LinearVelocity + accel * delta).LimitLength(LinearSpeedMax);
             if (ApplyLinearDrag)
-                velocity = velocity.LinearInterpolate(Vector2.Zero, LinearDragPercentage);
-            velocity = body.MoveAndSlide(velocity);
+                velocity = velocity.Lerp(Vector2.Zero, LinearDragPercentage);
+
+            body.Velocity = velocity;
+            body.MoveAndSlide();
+            velocity = body.Velocity;
             if (CalculateVelocities)
                 LinearVelocity = GSAIUtils.ToVector3(velocity);
         }
 
-        private void _ApplyCollideSteering(KinematicBody2D body, Vector3 accel, float delta)
+        private void _ApplyCollideSteering(CharacterBody2D body, Vector3 accel, float delta)
         {
             var velocity = GSAIUtils.ClampedV3(LinearVelocity + accel * delta, LinearSpeedMax);
             if (ApplyLinearDrag)
-                velocity = velocity.LinearInterpolate(Vector3.Zero, LinearDragPercentage);
+                velocity = velocity.Lerp(Vector3.Zero, LinearDragPercentage);
             body.MoveAndCollide(GSAIUtils.ToVector2(velocity) * delta);
             if (CalculateVelocities)
                 LinearVelocity = velocity;
         }
 
-        private void _ApplyPositionSteering(KinematicBody2D body, Vector3 accel, float delta)
+        private void _ApplyPositionSteering(CharacterBody2D body, Vector3 accel, float delta)
         {
             var velocity = GSAIUtils.ClampedV3(LinearVelocity + accel * delta, LinearSpeedMax);
             if (ApplyLinearDrag)
-                velocity = velocity.LinearInterpolate(Vector3.Zero, LinearDragPercentage);
+                velocity = velocity.Lerp(Vector3.Zero, LinearDragPercentage);
             body.GlobalPosition += GSAIUtils.ToVector2(velocity) * delta;
             if (CalculateVelocities)
                 LinearVelocity = velocity;
         }
 
-        private void _ApplyOrientationSteering(KinematicBody2D body, float angular_acceleration, float delta)
+        private void _ApplyOrientationSteering(CharacterBody2D body, float angular_acceleration, float delta)
         {
             var velocity = Mathf.Clamp(AngularVelocity + angular_acceleration * delta, -AngularSpeedMax, AngularSpeedMax);
             if (ApplyAngularDrag)
@@ -126,7 +129,7 @@ namespace GodotSteeringAI
                 AngularVelocity = velocity;
         }
 
-        private void _SetBody(KinematicBody2D body)
+        private void _SetBody(CharacterBody2D body)
         {
             if (body is null)
                 return;
@@ -158,7 +161,7 @@ namespace GodotSteeringAI
                 {
                     LinearVelocity = GSAIUtils.ClampedV3(GSAIUtils.ToVector3(current_position - _last_position), LinearSpeedMax);
                     if (ApplyLinearDrag)
-                        LinearVelocity = LinearVelocity.LinearInterpolate(Vector3.Zero, LinearDragPercentage);
+                        LinearVelocity = LinearVelocity.Lerp(Vector3.Zero, LinearDragPercentage);
 
                     AngularVelocity = Mathf.Clamp(_last_orientation - current_orientation, -AngularSpeedMax, AngularSpeedMax);
 

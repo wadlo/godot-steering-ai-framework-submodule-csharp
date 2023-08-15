@@ -1,4 +1,4 @@
-﻿using Godot;
+using Godot;
 using System;
 
 namespace GodotSteeringAI
@@ -8,36 +8,36 @@ namespace GodotSteeringAI
     /// not have to using a RigidBody.
     /// @category - Specialized agents
     /// </summary>
-    public class GSAIRigidBody3DAgent: GSAISpecializedAgent
+    public partial class GSAIRigidBody3DAgent: GSAISpecializedAgent
     {
         /// <summary>
         /// The RigidBody to keep track of
         /// </summary>
-        public RigidBody Body { get { return _BodyRefToBody(); } set { _SetBody(value); } }
+        public RigidBody3D Body { get { return _BodyRefToBody(); } set { _SetBody(value); } }
 
         private WeakRef _body_ref;
         private Vector3 _last_position;
 
-        private RigidBody _BodyRefToBody()
+        private RigidBody3D _BodyRefToBody()
         {
-            return _body_ref.GetRef() as RigidBody;
+            return _body_ref.GetRef().As<RigidBody3D>();
         }
 
-        public GSAIRigidBody3DAgent(RigidBody body)
+        public GSAIRigidBody3DAgent(RigidBody3D body)
         {
             if (!body.IsInsideTree())
             {
-                body.Connect("ready", this, nameof(_OnBody_Ready));
+                body.Connect("ready", new Callable(this, nameof(_OnBody_Ready)));
                 return;
             }
             _SetBody(body);
-            body.GetTree().Connect("physics_frame", this, nameof(_onSceneTree_PhysicsFrame));
+            body.GetTree().Connect("physics_frame", new Callable(this, nameof(_onSceneTree_PhysicsFrame)));
         }
 
         private void _OnBody_Ready()
         {
             _SetBody(_BodyRefToBody());
-            _BodyRefToBody().GetTree().Connect("physics_frame", this, nameof(_onSceneTree_PhysicsFrame));
+            _BodyRefToBody().GetTree().Connect("physics_frame", new Callable(this, nameof(_onSceneTree_PhysicsFrame)));
         }
 
         /// <summary>
@@ -58,17 +58,17 @@ namespace GodotSteeringAI
             if (CalculateVelocities)
             {
                 LinearVelocity = body.LinearVelocity;
-                AngularVelocity = body.AngularVelocity.y;
+                AngularVelocity = body.AngularVelocity.Y;
             }
         }
 
-        private void _SetBody(RigidBody body)
+        private void _SetBody(RigidBody3D body)
         {
             if (body is null)
                 return;
             _body_ref = WeakRef(body);
-            _last_position = body.Transform.origin;
-            _last_orientation = body.Rotation.y;
+            _last_position = body.Transform.Origin;
+            _last_orientation = body.Rotation.Y;
 
             Position = _last_position;
             Orientation = _last_orientation;
@@ -80,8 +80,8 @@ namespace GodotSteeringAI
             if (body is null || !body.IsInsideTree())
                 return;
 
-            var current_position = body.Transform.origin;
-            var current_orientation = body.Rotation.y;
+            var current_position = body.Transform.Origin;
+            var current_orientation = body.Rotation.Y;
 
             Position = current_position;
             Orientation = current_orientation;
@@ -93,7 +93,7 @@ namespace GodotSteeringAI
                 else
                 {
                     LinearVelocity = body.LinearVelocity;
-                    AngularVelocity = body.AngularVelocity.y;
+                    AngularVelocity = body.AngularVelocity.Y;
                 }
             }
         }

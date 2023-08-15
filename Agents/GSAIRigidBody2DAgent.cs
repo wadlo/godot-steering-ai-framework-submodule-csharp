@@ -1,4 +1,4 @@
-﻿using Godot;
+using Godot;
 using System;
 
 namespace GodotSteeringAI
@@ -8,7 +8,7 @@ namespace GodotSteeringAI
     /// not have to using a RigidBody2D.
     /// @category - Specialized agents
     /// </summary>
-    public class GSAIRigidBody2DAgent: GSAISpecializedAgent
+    public partial class GSAIRigidBody2DAgent: GSAISpecializedAgent
     {
         /// <summary>
         /// The RigidBody2D to keep track of
@@ -20,24 +20,24 @@ namespace GodotSteeringAI
 
         private RigidBody2D _BodyRefToBody()
         {
-            return _body_ref.GetRef() as RigidBody2D;
+            return _body_ref.GetRef().As<RigidBody2D>();
         }
 
         public GSAIRigidBody2DAgent(RigidBody2D body)
         {
             if (!body.IsInsideTree())
             {
-                body.Connect("ready", this, nameof(_OnBody_Ready));
+                body.Ready += _OnBody_Ready;
                 return;
             }
             _SetBody(body);
-            body.GetTree().Connect("physics_frame", this, nameof(_onSceneTree_PhysicsFrame));
+            body.GetTree().PhysicsFrame += _onSceneTree_PhysicsFrame;
         }
 
         private void _OnBody_Ready()
         {
             _SetBody(_BodyRefToBody());
-            _BodyRefToBody().GetTree().Connect("physics_frame", this, nameof(_onSceneTree_PhysicsFrame));
+            _BodyRefToBody().GetTree().PhysicsFrame += _onSceneTree_PhysicsFrame;
         }
 
         /// <summary>

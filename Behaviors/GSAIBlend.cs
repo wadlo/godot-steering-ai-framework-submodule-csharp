@@ -1,4 +1,4 @@
-﻿using Godot;
+using Godot;
 using System.Collections.Generic;
 
 namespace GodotSteeringAI
@@ -15,7 +15,7 @@ namespace GodotSteeringAI
     /// </summary>
     class GSAIBlend : GSAISteeringBehavior
     {
-        public class SteeringBehaviorPair
+        public partial class SteeringBehaviorPair
         {
             public GSAISteeringBehavior behavior;
             public float weight;
