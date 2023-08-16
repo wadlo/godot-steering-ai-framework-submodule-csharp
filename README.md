@@ -1,5 +1,5 @@
 # Godot Steering AI Framework
-This is the C# compatible version of `godot-steering-ai-framework-submodule`, A complete framework for Godot to create beautiful and complex AI motion. Works both in 2D and in 3D. 
+This is the Godot 4, C# compatible version of `godot-steering-ai-framework-submodule`, A complete framework for Godot to create beautiful and complex AI motion. Works both in 2D and in 3D. 
 
 Note: This repo is for use as Git submodules. A separate repo that includes the C# port of the examples exists at [godot-steering-ai-framework-CSharp-with-Demo](https://github.com/xhr-git/godot-steering-ai-framework-CSharp-with-Demo).
 
